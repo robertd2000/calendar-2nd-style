@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #cal {
+        /* width: 700px; */
+        margin: 0 auto;
+        position: relative;
+      }
+      table {
+        border-collapse: collapse;
+      }
+      td,
+      th {
+        width: 100px;
+        height: 100px;
+        text-align: center;
+        border-style: solid;
+        border-color: black;
+        border-spacing: 0ch;
+        font-size: 40px;
+        color: yellow;
+        transition: all 0.3s;
+        font-weight: bold;
+      }
+
+      th {
+        background-color: yellow;
+        color: blue;
+        border-color: black;
+        /* border-bottom-color: #fff; */
+      }
+
+      td {
+        border-color: yellow;
+      }
+
+      th:hover {
+        background-color: blue;
+        color: yellow;
+      }
+
+      td:hover {
+        background-color: yellow;
+        color: blue;
+      }
+
+      #clock {
+        float: right;
+        top: 170px;
+        /* background-color: #fff; */
+        margin-right: 0;
+        color: yellow;
+        padding: 10px;
+        position: fixed;
+        margin-left: 920px;
+        font-size: 50px;
+      }
+
+      /* #clock:hover {
+        background-color: rgb(250, 144, 4);
+      } */
+
+      body {
+        font-size: 40px;
+        /* background-image: url("intro.jpg"); */
+        background-color: blue;
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+
+      span {
+        width: 100px;
+        font-size: 60px;
+      }
+
+      .nav {
+        margin-bottom: 20px;
+      }
+
+      button {
+        width: 50px;
+        height: 40px;
+        background-color: yellow;
+        color: black;
+        text-transform: uppercase;
+        font-weight: bold;
+        border-color: black;
+        transition: all 0.3s;
+      }
+      button:hover {
+        background-color: blue;
+        color: #fff;
+        border-color: #fff;
+      }
+
+      .child {
+        display: inline-block;
+      }
+
+      #MonName {
+        color: #fff;
+      }
+
+      #today {
+        width: 400px;
+        height: 300px;
+        /* background-color: #fff; */
+        color: yellow;
+        position: fixed;
+        margin-left: 850px;
+        top: 300px;
+        text-align: center;
+        font-size: 80px;
+        vertical-align: bottom;
+      }
+
+      .wd {
+        font-size: 60px;
+      }
+
+      caption {
+        color: yellow;
+      }
+
+      #cd {
+          background-color: yellow;
+          color: blue;
+      }
+      #bd {
+          background-color: red;
+          
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <div id="next">></div> -->
+    <div class="nav">
+      <div class="child"><button id="pre">&lt</button></div>
+
+      <div class="child" id="MonName"></div>
+      <div class="child"><button id="next">&gt</button></div>
+    </div>
+
+    <div id="cal"></div>
+
+    <div id="clock">
+      <span class="hour">hh</span>:<span class="min">mm</span>:<span class="sec"
+        >ss</span
+      >
+    </div>
+    <div id="today">
+      Today:
+    </div>
+    <div>
+      <button id="more">---</button>
+    </div>
+    <script>
+      let prasdnics = {
+        7: new Date(2020, 7, 19).getDate(),
+        10: new Date(2020, 10, 28).getDate(),
+        9: new Date(2020, 9, 2).getDate(),
+        8: new Date(2020, 8, 13).getDate(),
+        11: new Date(2020, 11, 5).getDate(),
+        // 7: new Date(2020, 7, 1).getDate()
+      };
+      function upgrate() {
+        let clock = document.getElementById("clock");
+        let date = new Date();
+        let hours = date.getHours();
+        if (hours < 10) {
+          hours = "0" + hours;
+        }
+        let min = date.getMinutes();
+        if (min < 10) {
+          min = "0" + min;
+        }
+        let sec = date.getSeconds();
+        if (sec < 10) {
+          sec = "0" + sec;
+        }
+        clock.children[0].innerHTML = hours;
+        clock.children[1].innerHTML = min;
+        clock.children[2].innerHTML = sec;
+      }
+      let timert;
+      setInterval(upgrate, 1000);
+
+      //   function start() {
+      //     timert = setInterval(upgrate, 1000);
+      //     upgrate();
+      //   }
+
+      //   function stop() {
+      //     clearInterval(timert);
+      //     timert = null;
+      //   }
+      var arr = [
+        "Январь",
+        "Февраль",
+        "Март",
+        "Апрель",
+        "Май",
+        "Июнь",
+        "Июль",
+        "Август",
+        "Сентябрь",
+        "Октябрь",
+        "Ноябрь",
+        "Декабрь",
+      ];
+
+      let weekDays = [
+        "понедельник",
+        "вторник",
+        "среда",
+        "четверг",
+        "пятница",
+        "суббота",
+        "воскресение",
+      ];
+
+      function createCalendar(elem, year, month, day) {
+        let d = new Date(year, month);
+
+        let table =
+          "<table><caption>" +
+          arr[month] +
+          " " +
+          year +
+          "</caption><tr><th>пн</th><th>вт</th><th>ср</th><th>чт</th><th>пт</th><th>сб</th><th>вс</th></tr><tr>";
+        let d1 = new Date(year, month, day);
+        let today = d1.getDate();
+
+        for (let i = 0; i < getDay(d); i++) {
+          table += "<td></td>";
+        }
+        while (d.getMonth() == month) {
+          if (
+            prasdnics.hasOwnProperty(d.getMonth()) &&
+            prasdnics[d.getMonth()] == d.getDate()
+          )
+            table += "<td id = 'bd'>" + d.getDate() + "</td>";
+          else if (d.getDate() == today)
+            table += "<td id = 'cd'>" + d.getDate() + "</td>";
+          else {
+            table += "<td>" + d.getDate() + "</td>";
+          }
+
+          if (getDay(d) % 7 == 6) {
+            table += "</tr><tr>";
+          }
+          d.setDate(d.getDate() + 1);
+        }
+
+        // while (d.getMonth() == month) {
+        //   table += "<td>" + d.getDate() + "</td>";
+
+        //   if (getDay(d) % 7 == 6) {
+        //     table += "</tr><tr>";
+        //   }
+        //   d.setDate(d.getDate() + 1);
+        // }
+
+        if (getDay(d) != 0) {
+          for (let i = getDay(d); i < 7; i++) {
+            table += "<td></td>";
+          }
+        }
+        table += "</tr></table>";
+        elem.innerHTML = table;
+      }
+
+      function getDay(date) {
+        let day = date.getDay();
+        if (day == 0) {
+          day = 7;
+        }
+
+        return day - 1;
+      }
+      let curDate = new Date();
+      let curMon = curDate.getMonth();
+      let curYear = curDate.getFullYear();
+      
+      let curDay = curDate.getDate();
+      createCalendar(cal, curYear, curMon, curDay);
+      today.innerHTML =
+        curDay +
+        " " +
+        arr[curMon] +
+        "<br>" +
+        '<span class="wd">' +
+        weekDays[getDay(curDate)] +
+        "</span>";
+      //   MonName.innerHTML = arr[curMon] + " " + curYear;
+      console.log(curMon);
+      next.onclick = function () {
+        curMon = curMon + 1;
+        if (curMon <= 11) {
+          createCalendar(cal, curYear, curMon);
+          //   MonName.innerHTML = arr[curMon] + " " + curYear;
+        } else {
+          curYear = curYear + 1;
+          curMon = 0;
+          createCalendar(cal, curYear, curMon);
+          //   MonName.innerHTML = arr[curMon] + " " + curYear;
+        }
+      };
+
+      pre.onclick = function () {
+        curMon = curMon - 1;
+        if (curMon > 0) {
+          createCalendar(cal, curYear, curMon);
+        } else {
+          curYear = curYear - 1;
+          curMon = 11;
+          createCalendar(cal, curYear, curMon);
+        }
+        // MonName.innerHTML = arr[curMon] + " " + curYear;
+      };
+
+      more.onclick = function () {
+        curMon = curMon + 1;
+        let d = document.createElement("div");
+        // let h = document.createElement("div");
+        // h.id = "MonName";
+        // h.innerHTML = arr[curMon] + " " + curYear;
+        // document.body.append(h);
+        d.id = "cal2";
+
+        document.body.append(d);
+
+        if (curMon <= 11) {
+          createCalendar(cal2, curYear, curMon);
+        } else {
+          curYear = curYear + 1;
+          curMon = 0;
+          createCalendar(cal2, curYear, curMon);
+        }
+        curMon = curMon + 1;
+        let d3 = document.createElement("div");
+        d3.id = "cal3";
+        // let h3 = document.createElement("div");
+        // h3.id = "MonName";
+        // h3.innerHTML = arr[curMon] + " " + curYear;
+        // document.body.append(h3);
+        document.body.append(d3);
+
+        if (curMon <= 11) {
+          createCalendar(cal3, curYear, curMon);
+        } else {
+          curYear = curYear + 1;
+          curMon = 0;
+          createCalendar(cal3, curYear, curMon);
+        }
+        curMon = curMon + 1;
+
+        // let h4 = document.createElement("div");
+        // h4.id = "MonName";
+        // h4.innerHTML = arr[curMon] + " " + curYear;
+        // document.body.append(h4);
+        let d4 = document.createElement("div");
+        d4.id = "cal4";
+        document.body.append(d4);
+
+        if (curMon <= 11) {
+          createCalendar(cal4, curYear, curMon);
+        } else {
+          curYear = curYear + 1;
+          curMon = 0;
+          createCalendar(cal4, curYear, curMon);
+        }
+        curMon = curMon + 1;
+        // let h5 = document.createElement("div");
+        // h5.id = "MonName";
+        // h5.innerHTML = arr[curMon] + " " + curYear;
+        // document.body.append(h5);
+
+        let d5 = document.createElement("div");
+        d5.id = "cal5";
+        document.body.append(d5);
+
+        if (curMon <= 11) {
+          createCalendar(cal5, curYear, curMon);
+        } else {
+          curYear = curYear + 1;
+          curMon = 0;
+          createCalendar(cal5, curYear, curMon);
+        }
+        curMon = curMon + 1;
+
+        // let h6 = document.createElement("div");
+        // h6.id = "MonName";
+        // h6.innerHTML = arr[curMon] + " " + curYear;
+        // document.body.append(h6);
+        let d6 = document.createElement("div");
+        d6.id = "cal6";
+        document.body.append(d6);
+
+        if (curMon <= 11) {
+          createCalendar(cal6, curYear, curMon);
+        } else {
+          curYear = curYear + 1;
+          curMon = 0;
+          createCalendar(cal6, curYear, curMon);
+        }
+        curMon = curMon + 1;
+        // let h7 = document.createElement("div");
+        // h7.id = "MonName";
+        // h7.innerHTML = arr[curMon] + " " + curYear;
+        // document.body.append(h7);
+
+        let d7 = document.createElement("div");
+        d7.id = "cal7";
+        document.body.append(d7);
+
+        if (curMon <= 11) {
+          createCalendar(cal7, curYear, curMon);
+        } else {
+          curYear = curYear + 1;
+          curMon = 0;
+          createCalendar(cal7, curYear, curMon);
+        }
+        curMon = curMon + 1;
+        let d8 = document.createElement("div");
+
+        // let h8 = document.createElement("div");
+        // h8.id = "MonName";
+        // h8.innerHTML = arr[curMon] + " " + curYear;
+        // document.body.append(h8);
+        d8.id = "cal8";
+        document.body.append(d8);
+
+        if (curMon <= 11) {
+          createCalendar(cal8, curYear, curMon);
+        } else {
+          curYear = curYear + 1;
+          curMon = 0;
+          createCalendar(cal8, curYear, curMon);
+        }
+        curMon = curMon + 1;
+        let d9 = document.createElement("div");
+
+        // let h9 = document.createElement("div");
+        // h9.id = "MonName";
+        // h9.innerHTML = arr[curMon] + " " + curYear;
+        // document.body.append(h9);
+        d9.id = "cal9";
+        document.body.append(d9);
+
+        if (curMon <= 11) {
+          createCalendar(cal9, curYear, curMon);
+        } else {
+          curYear = curYear + 1;
+          curMon = 0;
+          createCalendar(cal9, curYear, curMon);
+        }
+        curMon = curMon + 1;
+        let d10 = document.createElement("div");
+
+        // let h10 = document.createElement("div");
+        // h10.id = "MonName";
+        // h10.innerHTML = arr[curMon] + " " + curYear;
+        // document.body.append(h10);
+        d10.id = "cal10";
+        document.body.append(d10);
+
+        if (curMon <= 11) {
+          createCalendar(cal10, curYear, curMon);
+        } else {
+          curYear = curYear + 1;
+          curMon = 0;
+          createCalendar(cal10, curYear, curMon);
+        }
+        curMon = curMon + 1;
+        let d11 = document.createElement("div");
+
+        // let h11 = document.createElement("div");
+        // h11.id = "MonName";
+        // h11.innerHTML = arr[curMon] + " " + curYear;
+        // document.body.append(h11);
+        d11.id = "cal11";
+        document.body.append(d11);
+
+        if (curMon <= 11) {
+          createCalendar(cal11, curYear, curMon);
+        } else {
+          curYear = curYear + 1;
+          curMon = 0;
+          createCalendar(cal11, curYear, curMon);
+        }
+        curMon = curMon + 1;
+        let d12 = document.createElement("div");
+
+        // let h12 = document.createElement("div");
+        // h12.id = "MonName";
+        // h12.innerHTML = arr[curMon] + " " + curYear;
+        // document.body.append(h12);
+        d12.id = "cal12";
+        document.body.append(d12);
+
+        if (curMon <= 11) {
+          createCalendar(cal12, curYear, curMon);
+        } else {
+          curYear = curYear + 1;
+          curMon = 0;
+          createCalendar(cal12, curYear, curMon);
+        }
+      };
+    </script>
+  </body>
+</html>
